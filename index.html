@@ -128,7 +128,6 @@
 			var block = new Block((Math.random()*550), 0, .5); //max x coordinate is 540 for some padding on the right side.
 			game.appendChild(block.element);
 			blocks.push(block);
-			setInterval(tick, Math.floor(1000/30));
 			frame = 0; //reset frame count for next round of 100 frames
 		}
 
@@ -171,7 +170,7 @@
 	blocks.push(block);
 
 	//Update the game and draw the screen 100 times per second!
-	setInterval(tick, Math.floor(1000/30));
+	setInterval(tick, Math.floor(1000/100));
 
 	/*
 	 * OPTIONAL WORK
