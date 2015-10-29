@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Falling Blocks</title>
+	<style>
+		body {
+			background-image: url(https://upload.wikimedia.org/wikipedia/commons/8/88/Pattern_brick_32_v2.png);
+		}
+		#game {
+			width: 600px;
+			height: 600px;
+			border: 1px solid black;
+			background-color: #ccc;
+			margin: 20px auto;
+			position: relative;
+			cursor: crosshair;
+		}
+		.block {
+			width: 40px;
+			height: 20px;
+			border: 2px solid #C33;
+			background-color: #FAA;
+			position: absolute;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="game"></div>
+
+	<script>
+	/*
+	 *	Welcome to the falling blocks game! It's almost done, but we need you to
+	 *	help finish the code. You'll find two tasks below, marked "TODO", with
+	 *	additional instructions and hints. Good luck!
+	*/
+
+	// Keep track of the "game" div
+	var game = document.getElementById("game");
+
+	//Keep track of the mouse position over time
+	var mouse = {
+		x: 0,
+		y: 0
+	};
+
+	//Keep a list of the blocks to iterate over
+	var blocks = [];
+
+	//keep track of how many frames have passed
+	var frame = 0;
+	/*
+	 * Block Class
+	 * Represents one falling block on the screen
+	 * @param x Number The starting x-coordinate
+	 * @param y Number The starting y-coordinate
+	 * @param speed Number Number of pixels to "fall" each update
+	*/
+	var Block = function(x, y, speed) {
+
+		/*
+		 * createElement()
+		 * @return object A div with class "block" to represent this block
+		 */
+		this.createElement = function() {
+			var div = document.createElement('div');
+			div.className = "block";
+			return div;
+		};
+
+		/*
+		 * update()
+		 * Make the block "fall" its speed in pixels
+		 * @return void
+		 */
+		this.update = function() {
+			this.y += speed;
+		};
+
+		/*
+		 * draw()
+		 * Update the element for this block to the new block position
+		 * @return void
+		 */
+		this.draw = function() {
+			this.element.style.top = this.y + "px";
+			this.element.style.left = this.x + "px";
+		};
+
+		/*
+		 * isCollidingMouse
+		 * @return boolean Is the mouse inside the block area?
+		*/
+		this.isCollidingMouse = function() {
+			return (mouse.x > this.x &&
+				mouse.x < this.x + 40 &&
+				mouse.y > this.y &&
+				mouse.y < this.y + 20);
+		};
+
+		//set up instance variables
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.element = this.createElement();
+
+	};
+
+
+	/*
+	 * Watch for when the mouse moves, and update our global mouse position var
+	 */
+	game.onmousemove = function(evt) {
+		mouse.x = evt.clientX - game.offsetLeft;
+		mouse.y = evt.clientY - game.offsetTop;
+	};
+
+	/*
+	 * The main game loop! Fires 30 times per second.
+	 */
+	var tick = function() {
+		//update our frame count
+		frame ++;
+
+		//Isha's notes -- if the frame hits 100 then create a new block
+		if (frame === 100){
+			var block = new Block((Math.random()*550), 0, .5); //max x coordinate is 540 for some padding on the right side.
+			game.appendChild(block.element);
+			blocks.push(block);
+			setInterval(tick, Math.floor(1000/30));
+			frame = 0; //reset frame count for next round of 100 frames
+		}
+
+		console.log(block);
+		/*
+		 * Hint: Think "modulo"
+		 */
+		
+
+		//update, draw, and check each block for collisions
+		for (var b in blocks) {
+			blocks[b].update();
+			blocks[b].draw();
+			if (blocks[b].isCollidingMouse()) {
+				console.log("YOU LOSE");
+			}
+
+			//Isha's notes -- If statement to see if blocks is off the bottom of the div
+			//Use array.splice(b,1) to target that block then remove the html element
+			
+			if (blocks[b].y > 580) {
+				blocks.splice(b,1);
+				var toRemove =  document.getElementsByClassName('block');
+				toRemove[b].remove();
+				}
+
+			/*
+			 * TODO: Remove blocks which are off the bottom of the stage
+			 * Hint: remember to remove both the object, as well as the HTML element
+			 * Hint: Array.splice()
+			*/
+		}
+	};
+
+	//Create a test bloc
+	var block = new Block(100, 0, .5);
+	//Append the div of that block to the game screen
+	game.appendChild(block.element);
+	//Append the block to the global array of blocks
+	blocks.push(block);
+
+	//Update the game and draw the screen 100 times per second!
+	setInterval(tick, Math.floor(1000/30));
+
+	/*
+	 * OPTIONAL WORK
+	 * 1. Make the game do something more exciting when you lose
+	 * 2. As the user dodges more blocks, increase the speed of new blocks
+	 * 3. Create a small image or shape for the user's mouse instead of the crosshair.
+	 * 4. Write an algorithm which will spawn the blocks intelligently, instead of randomly.
+	*/
+
+	</script>
+</body>
+</html>
