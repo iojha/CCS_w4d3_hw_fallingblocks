@@ -125,25 +125,17 @@
 
 		//Isha's notes -- if the frame hits 100 then create a new block
 		if (frame === 100){
-			var block = new Block((Math.random()*550), 0, .5); //max x coordinate is 540 for some padding on the right side.
+			var block = new Block((Math.random()*540), 0, .5); //max x coordinate is 540 for some padding on the right side.
 			game.appendChild(block.element);
 			blocks.push(block);
 			frame = 0; //reset frame count for next round of 100 frames
 		}
-
-		console.log(block);
-		/*
-		 * Hint: Think "modulo"
-		 */
-		
+	
 
 		//update, draw, and check each block for collisions
 		for (var b in blocks) {
 			blocks[b].update();
 			blocks[b].draw();
-			if (blocks[b].isCollidingMouse()) {
-				console.log("YOU LOSE");
-			}
 
 			//Isha's notes -- If statement to see if blocks is off the bottom of the div
 			//Use array.splice(b,1) to target that block then remove the html element
@@ -153,12 +145,6 @@
 				var toRemove =  document.getElementsByClassName('block');
 				toRemove[b].remove();
 				}
-
-			/*
-			 * TODO: Remove blocks which are off the bottom of the stage
-			 * Hint: remember to remove both the object, as well as the HTML element
-			 * Hint: Array.splice()
-			*/
 		}
 	};
 
